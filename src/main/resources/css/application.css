@@ -1,0 +1,25 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.table-column {
+  -fx-alignment: CENTER_LEFT;
+}
+
+.table-row-cell {
+    -fx-background-color: #F5F5F5;
+    -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0;
+    -fx-text-fill: black;
+    -fx-border-width: 1.0 1.0 0.0 0.0;
+    -fx-border-color: #DBD7D2;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:odd {
+	-fx-background-color: #EAE9E8;
+}
+
+.table-view:focused .table-row-cell:filled:focused:selected {
+    -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-selection-bar;
+    -fx-background-insets: 0.0, 1.0, 2.0;
+    -fx-background: -fx-accent;
+    -fx-text-fill: -fx-selection-bar-text;
+}
