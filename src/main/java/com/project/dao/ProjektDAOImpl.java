@@ -11,9 +11,14 @@ import java.util.List;
 
 public class ProjektDAOImpl implements ProjektDAO {
 
-
+    /**
+     * Dodaje nowy projekt do bazy danych lub aktualizuje istniejący projekt.
+     * Jeśli `projektId` jest null, wykonuje operację INSERT, w przeciwnym razie UPDATE.
+     *
+     * @param projekt - obiekt Projekt do zapisania w bazie danych
+     */
     @Override
-    public void setProjekt(Projekt projekt){
+    public void setProjekt(Projekt projekt) {
         boolean isInsert = projekt.getProjektId() == null;
         String query = isInsert ?
                 "INSERT INTO projekt(nazwa, opis, dataczas_utworzenia, data_oddania) VALUES (?, ?, ?, ?)"
@@ -45,9 +50,16 @@ public class ProjektDAOImpl implements ProjektDAO {
         }
     }
 
-
+    /**
+     * Pobiera listę projektów z bazy danych z możliwością paginacji.
+     * Projekty są sortowane malejąco według daty utworzenia.
+     *
+     * @param offset - liczba pominiętych projektów (może być null)
+     * @param limit  - maksymalna liczba projektów do pobrania (może być null)
+     * @return lista projektów
+     */
     @Override
-    public List<Projekt> getProjekty(Integer offset, Integer limit){
+    public List<Projekt> getProjekty(Integer offset, Integer limit) {
         List<Projekt> projekty = new ArrayList<>();
         String query = "SELECT * FROM projekt ORDER BY dataczas_utworzenia DESC"
                 + (offset != null ? " OFFSET ?" : "")
@@ -79,7 +91,12 @@ public class ProjektDAOImpl implements ProjektDAO {
         return projekty;
     }
 
-
+    /**
+     * Pobiera pojedynczy projekt z bazy danych na podstawie jego ID.
+     *
+     * @param projektId - ID projektu do pobrania
+     * @return obiekt Projekt lub null, jeśli projekt nie istnieje
+     */
     @Override
     public Projekt getProjekt(Integer projektId) {
         String query = "SELECT * FROM projekt WHERE projekt_id = ?";
@@ -103,6 +120,11 @@ public class ProjektDAOImpl implements ProjektDAO {
         return null;
     }
 
+    /**
+     * Usuwa projekt z bazy danych na podstawie jego ID.
+     *
+     * @param projektId - ID projektu do usunięcia
+     */
     @Override
     public void deleteProjekt(Integer projektId) {
         String query = "DELETE FROM projekt WHERE projekt_id = ?";
@@ -115,6 +137,15 @@ public class ProjektDAOImpl implements ProjektDAO {
         }
     }
 
+    /**
+     * Pobiera listę projektów, których nazwa zawiera określony ciąg znaków.
+     * Możliwość paginacji i sortowania malejąco według daty utworzenia.
+     *
+     * @param nazwa  - ciąg znaków do wyszukania w nazwach projektów
+     * @param offset - liczba pominiętych projektów (może być null)
+     * @param limit  - maksymalna liczba projektów do pobrania (może być null)
+     * @return lista projektów spełniających kryteria
+     */
     @Override
     public List<Projekt> getProjektyWhereNazwaLike(String nazwa, Integer offset, Integer limit) {
         List<Projekt> projekty = new ArrayList<>();
@@ -150,6 +181,15 @@ public class ProjektDAOImpl implements ProjektDAO {
         return projekty;
     }
 
+    /**
+     * Pobiera listę projektów, których data oddania jest równa podanej dacie.
+     * Możliwość paginacji i sortowania malejąco według daty utworzenia.
+     *
+     * @param dataOddania - data oddania projektu
+     * @param offset      - liczba pominiętych projektów (może być null)
+     * @param limit       - maksymalna liczba projektów do pobrania (może być null)
+     * @return lista projektów spełniających kryteria
+     */
     @Override
     public List<Projekt> getProjektyWhereDataOddaniaIs(LocalDate dataOddania, Integer offset, Integer limit) {
         List<Projekt> projekty = new ArrayList<>();
@@ -185,6 +225,11 @@ public class ProjektDAOImpl implements ProjektDAO {
         return projekty;
     }
 
+    /**
+     * Zwraca liczbę wszystkich projektów w bazie danych.
+     *
+     * @return liczba projektów
+     */
     @Override
     public int getRowsNumber() {
         String query = "SELECT COUNT(*) FROM projekt";
@@ -200,6 +245,12 @@ public class ProjektDAOImpl implements ProjektDAO {
         return 0;
     }
 
+    /**
+     * Zwraca liczbę projektów, których nazwa zawiera określony ciąg znaków.
+     *
+     * @param nazwa - ciąg znaków do wyszukania w nazwach projektów
+     * @return liczba projektów spełniających kryteria
+     */
     @Override
     public int getRowsNumberWhereNazwaLike(String nazwa) {
         String query = "SELECT COUNT(*) FROM projekt WHERE nazwa LIKE ?";
@@ -217,6 +268,12 @@ public class ProjektDAOImpl implements ProjektDAO {
         return 0;
     }
 
+    /**
+     * Zwraca liczbę projektów, których data oddania jest równa podanej dacie.
+     *
+     * @param dataOddania - data oddania projektu
+     * @return liczba projektów spełniających kryteria
+     */
     @Override
     public int getRowsNumberWhereDataOddaniaIs(LocalDate dataOddania) {
         String query = "SELECT COUNT(*) FROM projekt WHERE data_oddania = ?";

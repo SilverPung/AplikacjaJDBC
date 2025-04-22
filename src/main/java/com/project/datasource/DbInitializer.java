@@ -38,7 +38,10 @@ public class DbInitializer {
 	};
 	
 	private DbInitializer() {}
-
+	/**
+	 * Metoda inicjalizująca bazę danych. Tworzy tabele i indeksy, jeśli nie istnieją.
+	 * Używa transakcji, aby zapewnić, że wszystkie zapytania są wykonane lub żadne z nich.
+	 */
 	public static void init() {
 		try (Connection conection = DataSource.getConnection()) {
 			boolean initialAutocommit = conection.getAutoCommit();

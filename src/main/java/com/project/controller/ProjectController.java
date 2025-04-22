@@ -77,14 +77,24 @@ public class ProjectController {
     @FXML
     private Button btnDodaj;
 
+    /**
+     * Konstruktor domyślny.
+     */
     public ProjectController() {
     }
 
+    /**
+     * Konstruktor z parametrem DAO do obsługi projektów.
+     * @param projektDAO obiekt DAO do zarządzania projektami.
+     */
     public ProjectController(ProjektDAO projektDAO) {
         this.projektDAO = projektDAO;
         executorService = Executors.newFixedThreadPool(1);
     }
 
+    /**
+     * Metoda inicjalizująca kontroler. Ustawia domyślne wartości i ładuje pierwszą stronę danych.
+     */
     @FXML
     public void initialize() {
         search4 = "";
@@ -97,6 +107,9 @@ public class ProjectController {
         executorService.execute(() -> loadPage(search4, pageNum, pageSize));
     }
 
+    /**
+     * Inicjalizuje ChoiceBox do wyboru rozmiaru strony.
+     */
     private void initPageSizeChoiceBox() {
         cbPageSizes.getItems().addAll(5, 10, 20, 50, 100);
         cbPageSizes.setValue(pageSize);
@@ -107,6 +120,9 @@ public class ProjectController {
         });
     }
 
+    /**
+     * Inicjalizuje tabelę z danymi projektów, w tym kolumny i ich formatowanie.
+     */
     private void initTable() {
         colId.setCellValueFactory(new PropertyValueFactory<>("projektId"));
         colNazwa.setCellValueFactory(new PropertyValueFactory<>("nazwa"));
@@ -127,6 +143,10 @@ public class ProjectController {
         });
     }
 
+    /**
+     * Tworzy komórkę tabeli z przyciskami do edycji i usuwania projektów.
+     * @return komórka tabeli z przyciskami.
+     */
     private TableCell<Projekt, Void> createEditDeleteCell() {
         return new TableCell<Projekt, Void>() {
             private final Button btnUsun = new Button("usuń");
@@ -161,7 +181,10 @@ public class ProjectController {
         };
     }
 
-    // Button action handlers
+    /**
+     * Obsługuje akcję przycisku "Szukaj". Wyszukuje projekty na podstawie wprowadzonego tekstu.
+     * @param event zdarzenie akcji.
+     */
     @FXML
     private void onActionBtnSzukaj(ActionEvent event) {
         search4 = txtSzukaj.getText().trim();
@@ -169,12 +192,20 @@ public class ProjectController {
         loadPage(search4, pageNum, pageSize);
     }
 
+    /**
+     * Obsługuje akcję przycisku "Dalej". Ładuje następną stronę danych.
+     * @param event zdarzenie akcji.
+     */
     @FXML
     private void onActionBtnDalej(ActionEvent event) {
         pageNum++;
         loadPage(search4, pageNum, pageSize);
     }
 
+    /**
+     * Obsługuje akcję przycisku "Wstecz". Ładuje poprzednią stronę danych.
+     * @param event zdarzenie akcji.
+     */
     @FXML
     private void onActionBtnWstecz(ActionEvent event) {
         if (pageNum > 0) {
@@ -183,19 +214,35 @@ public class ProjectController {
         }
     }
 
+    /**
+     * Obsługuje akcję przycisku "Pierwsza". Ładuje pierwszą stronę danych.
+     * @param event zdarzenie akcji.
+     */
     @FXML
     private void onActionBtnPierwsza(ActionEvent event) {
     }
 
+    /**
+     * Obsługuje akcję przycisku "Ostatnia". Ładuje ostatnią stronę danych.
+     * @param event zdarzenie akcji.
+     */
     @FXML
     private void onActionBtnOstatnia(ActionEvent event) {
     }
 
+    /**
+     * Obsługuje akcję przycisku "Dodaj". Otwiera okno do dodawania nowego projektu.
+     * @param event zdarzenie akcji.
+     */
     @FXML
     private void onActionBtnDodaj(ActionEvent event) {
         projektWindow(null);
     }
 
+    /**
+     * Otwiera okno do edycji lub dodawania projektu.
+     * @param oldProjekt projekt do edycji lub null, jeśli tworzony jest nowy projekt.
+     */
     private void projektWindow(Projekt oldProjekt) {
         Stage stage = new Stage();
         VBox layout = new VBox(10);
@@ -255,6 +302,12 @@ public class ProjectController {
         stage.showAndWait();
     }
 
+    /**
+     * Ładuje stronę danych projektów na podstawie kryteriów wyszukiwania, numeru strony i rozmiaru strony.
+     * @param search4 tekst wyszukiwania.
+     * @param pageNo numer strony.
+     * @param pageSize rozmiar strony.
+     */
     private void loadPage(String search4, Integer pageNo, Integer pageSize) {
         try {
             final List<Projekt> projektList = new ArrayList<>();
@@ -277,6 +330,11 @@ public class ProjectController {
         }
     }
 
+    /**
+     * Wyświetla okno błędu z podanym nagłówkiem i treścią.
+     * @param header nagłówek błędu.
+     * @param content treść błędu.
+     */
     private void showError(String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Błąd");
@@ -285,6 +343,9 @@ public class ProjectController {
         alert.showAndWait();
     }
 
+    /**
+     * Zamyka executorService, zapewniając poprawne zakończenie wątków.
+     */
     public void shutdown() {
         if (executorService != null) {
             executorService.shutdown();
